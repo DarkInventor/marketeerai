@@ -1,3 +1,7 @@
+// ./app/page.tsx
+
+"use client"
+
 import Card from "@/components/home/card";
 import Balancer from "react-wrap-balancer";
 import { DEPLOY_URL } from "@/lib/constants";
@@ -6,8 +10,30 @@ import WebVitals from "@/components/home/web-vitals";
 import ComponentGrid from "@/components/home/component-grid";
 import Image from "next/image";
 import { nFormatter } from "@/lib/utils";
+// import React, { useRef } from 'react';
+import React, { useRef, ChangeEvent, useEffect } from 'react';
+import Search from '../components/shared/search';
 
 export default async function Home() {
+
+  const communityNamesRef = useRef<string[]>([]);
+
+  const handleSearch = (names: string[]) => {
+    communityNamesRef.current = names.slice();
+  };
+
+  useEffect(() => {
+    // Add this effect to trigger a re-render when communityNamesRef.current changes
+    // This will update the Card component with the new data
+    // You can customize the dependencies as needed
+    // For example, if communityNamesRef.current should trigger a re-render whenever it changes, leave the array empty ([])
+    // If you have other dependencies that should trigger the re-render, include them in the array
+    // For example: [communityNamesRef.current, otherDependency]
+    // This will ensure that the Card component is updated when the data changes.
+    // Note that this may not be necessary if your component already re-renders correctly.
+  }, [communityNamesRef.current]);
+
+  // const [communityNames, setCommunityNames] = useState<string[]>([]);
   const { stargazers_count: stars } = await fetch(
     "https://api.github.com/repos/steven-tey/precedent",
     {
@@ -35,22 +61,22 @@ export default async function Home() {
         >
           <Twitter className="h-5 w-5 text-[#1d9bf0]" />
           <p className="text-sm font-semibold text-[#1d9bf0]">
-            Introducing Precedent
+            Introducing Marketeer AI
           </p>
         </a>
         <h1
           className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-7xl md:leading-[5rem]"
           style={{ animationDelay: "0.15s", animationFillMode: "forwards" }}
         >
-          <Balancer>Building blocks for your Next project</Balancer>
+          <Balancer>Social Media Marketing Made Simple</Balancer>
         </h1>
         <p
           className="mt-6 animate-fade-up text-center text-gray-500 opacity-0 md:text-xl"
           style={{ animationDelay: "0.25s", animationFillMode: "forwards" }}
         >
           <Balancer>
-            An opinionated collection of components, hooks, and utilities for
-            your Next.js project.
+          describe your product, get tailored keywords, and one-click joins for groups on reddit, linkedin & facebook
+
           </Balancer>
         </p>
         <div
@@ -77,18 +103,18 @@ export default async function Home() {
                 strokeLinejoin="round"
               />
             </svg>
-            <p>Deploy to Vercel</p>
+            <p>Deployed on Vercel</p>
           </a>
           <a
             className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-5 py-2 text-sm text-gray-600 shadow-md transition-colors hover:border-gray-800"
-            href="https://github.com/steven-tey/precedent"
+            href="https://github.com/DarkInventor/crawler"
             target="_blank"
             rel="noopener noreferrer"
           >
             <Github />
             <p>
               <span className="hidden sm:inline-block">Star on</span> GitHub{" "}
-              <span className="font-semibold">{nFormatter(stars)}</span>
+              {/* <span className="font-semibold">{nFormatter(stars)}</span> */}
             </p>
           </a>
         </div>
@@ -100,7 +126,7 @@ export default async function Home() {
             title={title}
             description={description}
             demo={
-              title === "Beautiful, reusable components" ? (
+              title === "Join Multiple Groups in One Click" ? (
                 <ComponentGrid />
               ) : (
                 demo
@@ -108,23 +134,34 @@ export default async function Home() {
             }
             large={large}
           />
+          
         ))}
+        {communityNamesRef.current.length && (
+  <Card
+    key="Community Card"
+    title="Community Names"
+    description="List of Community Names"
+    demo={<ul>{communityNamesRef.current.map(name => <li key={name}>{name}</li>)}</ul>}
+  />
+)}
+
       </div>
+      {/* <Search onSearch={handleSearch} /> */}
     </>
   );
 }
 
 const features = [
   {
-    title: "Beautiful, reusable components",
+    title: "Join Multiple Groups in One Click",
     description:
-      "Pre-built beautiful, a11y-first components, powered by [Tailwind CSS](https://tailwindcss.com/), [Radix UI](https://www.radix-ui.com/), and [Framer Motion](https://framer.com/motion)",
+      "Search a keyword, see the results, and use one click ('+') to join all the groups",
     large: true,
   },
   {
     title: "Performance first",
     description:
-      "Built on [Next.js](https://nextjs.org/) primitives like `@next/font` and `next/image` for stellar performance.",
+      "Connect effortlessly with your target audience. Join multiple groups in single click",
     demo: <WebVitals />,
   },
   {
